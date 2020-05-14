@@ -11,8 +11,11 @@
 
 
 from angle_interpolation import AngleInterpolationAgent
+from spark_agent import JOINT_SENSOR_NAMES
 from keyframes import hello
-
+from os import listdir
+import numpy
+import pickle
 
 class PostureRecognitionAgent(AngleInterpolationAgent):
     def __init__(self, simspark_ip='localhost',
@@ -22,7 +25,7 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
                  sync_mode=True):
         super(PostureRecognitionAgent, self).__init__(simspark_ip, simspark_port, teamname, player_id, sync_mode)
         self.posture = 'unknown'
-        self.posture_classifier = None  # LOAD YOUR CLASSIFIER
+        self.posture_classifier = pickle.load(open('robot_pose.pkl', 'rb'))  # LOAD YOUR CLASSIFIER
 
     def think(self, perception):
         self.posture = self.recognize_posture(perception)
@@ -30,7 +33,17 @@ class PostureRecognitionAgent(AngleInterpolationAgent):
 
     def recognize_posture(self, perception):
         posture = 'unknown'
-        # YOUR CODE HERE
+
+        data = []
+        for (i,name) in enumerate(JOINT_SENSOR_NAMES.values()):
+            if ((i >= 6 and i <= 9) or (i >= 16 and i <= 19)):
+                data.append(perception.joint[name])
+        data += perception.imu
+
+        data = numpy.array(data).reshape(1, -1)
+
+        index = self.posture_classifier.predict(data)
+        posture = listdir('robot_pose_data')[index[0]]
 
         return posture
 
