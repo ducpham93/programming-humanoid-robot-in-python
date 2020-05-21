@@ -21,10 +21,10 @@ class StandingUpAgent(PostureRecognitionAgent):
         posture = self.posture
 
         new_attempt = False
-        if (posture == 'Belly' or posture == 'Back'):
+        if (posture == 'Belly' or posture == 'Back' or posture == 'Left' or posture == 'Right'):
             new_attempt = True
         if (new_attempt == True):
-            if (posture == 'Left' or posture == 'Belly' or posture == 'Crouch' or posture == 'Sit' or posture == 'Frog'):
+            if (posture == 'Left' or posture == 'Belly'):
                 self.keyframes = leftBellyToStand()
 
             if (posture == 'Right' or posture == 'Back'):
