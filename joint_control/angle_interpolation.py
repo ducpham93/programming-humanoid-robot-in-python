@@ -58,7 +58,7 @@ class AngleInterpolationAgent(PIDAgent):
         
         finishedJoints = 0
         for (i, name) in enumerate(names):
-            
+            #print("i is " + str(i))
             if (currentTime > times[i][-1]):
                 finishedJoints += 1
                 if (finishedJoints == len(names)):
@@ -76,7 +76,12 @@ class AngleInterpolationAgent(PIDAgent):
                     timeslot = j
                     break
                 
-            t = (currentTime - times[i][timeslot]) / (times[i][timeslot + 1] - times[i][timeslot]) 
+            if ((times[i][timeslot + 1] - times[i][timeslot]) == 0):
+                #print("TIME IS ZERO")
+                t = 0
+            else:
+                #print("TIME IS NOT ZERO")
+                t = (currentTime - times[i][timeslot]) / (times[i][timeslot + 1] - times[i][timeslot])
 
             if (timeslot == -1):
                 break
