@@ -87,7 +87,8 @@ if __name__ == '__main__':
     for joint in allJoints:
         print(str(joint) + ": " + str(agent.get_angle(joint)))
     
-    agent.set_angle("LHipYawPitch", 0.2)
-    agent.execute_keyframes(hello())
-    print(agent.get_transform("RKneePitch"))
-    #agent.get_posture()
+    #agent.execute_keyframes(hello())
+    #print(agent.get_transform("RKneePitch"))
+    print(agent.get_posture())
+    #while True:
+    #    agent.set_angle("HeadYaw", 1.0)

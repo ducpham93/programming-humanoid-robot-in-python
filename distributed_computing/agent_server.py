@@ -18,6 +18,7 @@ sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 import time
 from xmlrpc.server import SimpleXMLRPCServer
 import xmlrpc.client as client
+import threading
 
 from inverse_kinematics import InverseKinematicsAgent
 
@@ -36,7 +37,7 @@ class ServerAgent(InverseKinematicsAgent):
         '''set target angle of joint for PID controller
         '''
         # YOUR CODE HERE
-        print("SETTING ANGLE")
+        print("SETTING ANGLE TO " + str(angle) + " FOR JOINT " + joint_name)
         self.target_joints[joint_name] = angle
         return True
 
@@ -44,9 +45,9 @@ class ServerAgent(InverseKinematicsAgent):
         '''return current posture of robot'''
         # YOUR CODE HERE
         print("GETTING POSTURE")
+        self.posture = self.recognize_posture(self.perception)
         print(self.posture)
         return self.posture
-        #return self.recognize_posture(self.perception)
 
     def execute_keyframes(self, keyframes):
         '''excute keyframes, note this function is blocking call,
@@ -56,6 +57,7 @@ class ServerAgent(InverseKinematicsAgent):
         print("EXECUTING KEYFRAME")
         # set keyframes
         self.keyframes = keyframes
+        self.angle_interpolation(keyframes, self.perception)
         # blocking procedure
         start_time = time.time()
         current_time = time.time()
@@ -86,7 +88,8 @@ class ServerAgent(InverseKinematicsAgent):
         self.set_transforms(self, effector_name, transform)
         return True
 
-with SimpleXMLRPCServer(("localhost", 8000)) as server:
+def start_server(address, port):
+    server = SimpleXMLRPCServer((address, port))
     server.register_instance(ServerAgent(), allow_dotted_names=True)
     server.register_introspection_functions()
     server.register_multicall_functions()
@@ -99,6 +102,13 @@ with SimpleXMLRPCServer(("localhost", 8000)) as server:
 
 if __name__ == '__main__':
     agent = ServerAgent()
-    SimpleXMLRPCServer(("localhost", 8000))
+    thread = threading.Thread(target=start_server, args=["localhost", 8000])
+    thread.start()
+    time.sleep(5)
+    print("Starting Agent")
+    #thread = threading.Thread(target=agent.run(), args=[])
+    #thread.start()
+    #start_server("localhost", 8000)
     agent.run()
+
 

@@ -23,7 +23,8 @@ sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 from numpy.matlib import matrix, identity
 import numpy as np
 
-from angle_interpolation import AngleInterpolationAgent
+#from angle_interpolation import AngleInterpolationAgent
+from recognize_posture import PostureRecognitionAgent
 
 # below are listed the joints and their rotation relatively to their local coordinate system
 # the joint names themselves denote the rotation in the global coordinate system
@@ -33,7 +34,7 @@ yawJoints = ['HeadYaw', 'LShoulderRoll', 'LElbowRoll',  'RShoulderRoll', 'RElbow
 wristJoints = ['LWristYaw', 'RWristYaw']
 specialHipJoints = ['LHipYawPitch', 'RHipYawPitch']
 
-class ForwardKinematicsAgent(AngleInterpolationAgent):
+class ForwardKinematicsAgent(PostureRecognitionAgent):
     def __init__(self, simspark_ip='localhost',
                  simspark_port=3100,
                  teamname='DAInamite',
