@@ -19,8 +19,10 @@ import time
 from xmlrpc.server import SimpleXMLRPCServer
 import xmlrpc.client as client
 import threading
+from numpy.matlib import identity
 
 from inverse_kinematics import InverseKinematicsAgent
+from standing_up import TestStandingUpAgent
 
 class ServerAgent(InverseKinematicsAgent):
     '''ServerAgent provides RPC service
@@ -85,7 +87,12 @@ class ServerAgent(InverseKinematicsAgent):
         '''
         # YOUR CODE HERE
         print("SETTING TRANSFORM")
-        self.set_transforms(self, effector_name, transform)
+        # T = identity(4)
+        # T[-1, 1] = 0.05
+        # T[-1, 2] = 0.26
+        # self.set_transforms('LLeg', T)
+        
+        self.set_transforms(effector_name, transform)
         return True
 
 def start_server(address, port):
@@ -104,7 +111,6 @@ if __name__ == '__main__':
     agent = ServerAgent()
     thread = threading.Thread(target=start_server, args=["localhost", 8000])
     thread.start()
-    time.sleep(5)
     print("Starting Agent")
     #thread = threading.Thread(target=agent.run(), args=[])
     #thread.start()

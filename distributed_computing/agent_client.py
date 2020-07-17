@@ -10,6 +10,7 @@ import weakref
 import xmlrpc.client as client
 import threading
 from hello import hello
+from numpy.matlib import identity
 
 allJoints = ['LElbowYaw', 'LHipRoll', 'LAnkleRoll', 'RElbowYaw', 'RHipRoll', 
              'RAnkleRoll', 'HeadPitch', 'LShoulderPitch', 'LHipPitch', 'LKneePitch', 
@@ -53,7 +54,7 @@ class ClientAgent(object):
         '''set target angle of joint for PID controller
         '''
         # YOUR CODE HERE
-        self.ag.set_angle(joint_name, angle)
+        return self.ag.set_angle(joint_name, angle)
 
     def get_posture(self):
         '''return current posture of robot'''
@@ -65,7 +66,7 @@ class ClientAgent(object):
         e.g. return until keyframes are executed
         '''
         # YOUR CODE HERE
-        self.ag.execute_keyframes(keyframes)
+        return self.ag.execute_keyframes(keyframes)
 
     def get_transform(self, name):
         '''get transform with given name
@@ -77,7 +78,7 @@ class ClientAgent(object):
         '''solve the inverse kinematics and control joints use the results
         '''
         # YOUR CODE HERE
-        self.ag.set_transform(effector_name, transform)
+        return self.ag.set_transform(effector_name, transform)
 
 if __name__ == '__main__':
     agent = ClientAgent()
@@ -91,4 +92,5 @@ if __name__ == '__main__':
     #print(agent.get_transform("RKneePitch"))
     print(agent.get_posture())
     #while True:
-    #    agent.set_angle("HeadYaw", 1.0)
+    agent.set_angle("HeadYaw", 1.0)
+    # print(str("HeadYaw") + ": " + str(agent.get_angle("HeadYaw")))
