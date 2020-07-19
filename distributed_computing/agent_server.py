@@ -20,6 +20,7 @@ from xmlrpc.server import SimpleXMLRPCServer
 import xmlrpc.client as client
 import threading
 from numpy.matlib import identity
+import numpy as np
 
 from inverse_kinematics import InverseKinematicsAgent
 from standing_up import TestStandingUpAgent
@@ -80,7 +81,12 @@ class ServerAgent(InverseKinematicsAgent):
         '''
         # YOUR CODE HERE
         print("GETTING TRANSFORM")
-        return self.transforms[name]
+        returnv = self.transforms[name].tolist()
+        #print(returnv)
+        for i in range(len(returnv)):
+            for j in range(len(returnv[i])):
+                returnv[i][j] = float(returnv[i][j])
+        return returnv
 
     def set_transform(self, effector_name, transform):
         '''solve the inverse kinematics and control joints use the results
